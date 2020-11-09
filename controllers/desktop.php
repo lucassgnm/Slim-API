@@ -89,4 +89,9 @@ class Desktop extends Controller {
     {
         $this->model->enviarEmail();
     }
+
+    function todasUltimasVendas()
+    {
+        $this->model->todasUltimasVendas();
+    }
 }

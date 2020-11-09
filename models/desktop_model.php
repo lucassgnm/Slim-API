@@ -330,4 +330,20 @@ class Desktop_Model extends Model
     {
         enviarEmail("lucasgnm@gmail.com", "Teste", "Teste", "teste");
     }
+
+    public function todasUltimasVendas()
+    {
+        try {
+
+            $result = $this->db->select('select v.id, c.nome nomecliente, v.total, v.datavenda, cc.bandeira
+                                        from slimdata.venda v, slimdata.cliente c, slimdata.cliente_cartoes cc
+                                        where v.idcliente = c.id
+                                        and   v.cartao_pagamento = cc.id 
+                                        and   v.aberta = 0
+                                        order by v.datavenda desc
+                                        limit 6');
+        } catch (Exception $e) {
+        }
+        echo json_encode($result);
+    }
 }

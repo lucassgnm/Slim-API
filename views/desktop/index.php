@@ -1,4 +1,4 @@
-
+<?php header('Access-Control-Allow-Origin: *'); ?>
 		<h1>Cadastro de Clientes</h1>
 		<form name="frmCadCli" id="frmCadCli" method="post" role="form" action="">
 			<div class="row">
