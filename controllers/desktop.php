@@ -94,4 +94,9 @@ class Desktop extends Controller {
     {
         $this->model->todasUltimasVendas();
     }
+
+    function getInformacoesDash()
+    {
+        $this->model->getInformacoesDash();
+    }
 }

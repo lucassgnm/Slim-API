@@ -11,3 +11,9 @@ define('DB_NAME', 'slimdata');
 define('DB_USER', 'slimuser');
 define('DB_PASS', 'b+A2?pAx9P');
 
+//conf. da conexao com o BD
+define('EMAIL_HOST', 'smtp.umbler.com');
+define('EMAIL_USER', 'contato@slimws.tk');
+define('EMAIL_PASS', 'Contato1308!');
+
+

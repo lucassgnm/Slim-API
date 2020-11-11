@@ -17,17 +17,17 @@ use PHPMailer\PHPMailer\Exception;
  * * @return void 
  * */
 
-function EnviarEmail($para, $assunto, $corpocomhtml, $corposemhtml) {
+function EnviarEmail($para, $assunto, $corpocomhtml, $corposemhtml = "") {
     try {
         $mail = new PHPMailer();
         $mail->isSMTP();
-        $mail->Host = '';
+        $mail->Host = EMAIL_HOST;
         $mail->SMTPAuth = true;
-        $mail->Username = '';
-        $mail->Password = '';
+        $mail->Username = EMAIL_USER;
+        $mail->Password = EMAIL_PASS;
         $mail->Port = 587;
      
-        $mail->setFrom('contato@slimws.tk', 'No-Reply Mailer SlimApp');
+        $mail->setFrom('contato@slimws.tk', 'SlimApp Compras No-Reply Mailer');
         $mail->addAddress($para);
      
         $mail->isHTML(true);

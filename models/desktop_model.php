@@ -328,7 +328,38 @@ class Desktop_Model extends Model
 
     public function enviarEmail()
     {
-        enviarEmail("lucasgnm@gmail.com", "Teste", "Teste", "teste");
+        try {
+            $assunto = $_POST['assunto'];
+            $txt = $_POST['txt'];
+            
+            $msg = array(
+                "code" => 0,
+                "msg" => "Houve um erro ao enviar os emails."
+            );
+
+            if ($assunto == "" || $txt == "") {
+                echo json_encode($msg);
+                exit;
+            } 
+
+            $result = $this->db->select('select c.email
+                                         from slimdata.cliente c');
+
+            foreach ($result as $dt) {
+                enviarEmail($dt->email, $assunto, $txt);
+                echo $dt->email . "\n --- OK";
+            }
+            //var_dump($result); 
+            exit;
+            
+
+
+        } catch (Exception $e) {
+            $msg = array(
+                "code" => 2,
+                "msg" => "Houve um erro: " . $e
+            );
+        }
     }
 
     public function todasUltimasVendas()
@@ -346,4 +377,87 @@ class Desktop_Model extends Model
         }
         echo json_encode($result);
     }
+
+    public function getInformacoesDash()
+    {
+        try {
+
+            $result = $this->db->select('select (
+                select count(*)
+                from venda v 
+                where v.aberta = 1
+                and   cast(v.datavenda as date) = cast(now() as date)
+               ) vendashj,
+               (
+                select count(*)
+                from venda v
+                where cast(v.datavenda as date) = cast(now() as date)
+               ) vendastotaishj,
+               (
+                select count(*)
+                from venda v 
+                where cast(v.datavenda as date)
+                    between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
+               ) vendastotaismes,
+               (
+                   select avg(v.total)
+                from venda v 
+                where cast(v.datavenda as date)
+                    between DATE_ADD(CURRENT_DATE(), INTERVAL -7 DAY) AND CURRENT_DATE()
+               ) ticketmediosemanal,
+               (
+                select avg(v.total)
+                from venda v 
+                where cast(v.datavenda as date)
+                    between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
+               ) ticketmediomensal,
+               (
+                   select avg(v.total)
+                from venda v 
+                where cast(v.datavenda as date)
+                    between DATE_ADD(CURRENT_DATE(), INTERVAL -365 DAY) AND CURRENT_DATE()
+               ) ticketmedioanual
+               ');
+        } catch (Exception $e) {
+        }
+        echo json_encode($result);
+    }
 }
+
+/* 
+    -- Vendas abertas (HJ)
+select count(*) vendashj
+from venda v 
+where v.aberta = 1
+and   cast(v.datavenda as date) = cast(now() as date); 
+
+-- Vendas totais (HJ)
+select count(*) vendastotaishj
+from venda v
+where cast(v.datavenda as date) = cast(now() as date);
+
+-- Vendas totais (MES)
+select count(*) vendastotaismes
+from venda v 
+where cast(v.datavenda as date)
+    between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
+    
+-- Ticket médio semanal
+select avg(v.total) as ticketmediosemanal
+from venda v 
+where cast(v.datavenda as date)
+    between DATE_ADD(CURRENT_DATE(), INTERVAL -7 DAY) AND CURRENT_DATE()
+
+-- Ticket médio mensal
+select avg(v.total) as ticketmediomensal
+from venda v 
+where cast(v.datavenda as date)
+    between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
+
+-- Ticket médio anual
+select avg(v.total) as ticketmedioanual
+from venda v 
+where cast(v.datavenda as date)
+    between DATE_ADD(CURRENT_DATE(), INTERVAL -365 DAY) AND CURRENT_DATE()
+
+*/
