@@ -99,4 +99,9 @@ class Desktop extends Controller {
     {
         $this->model->getInformacoesDash();
     }
+
+    function todosProdutosXml()
+    {
+        $this->model->todosProdutosXml();
+    }
 }

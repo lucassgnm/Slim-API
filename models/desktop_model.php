@@ -331,7 +331,7 @@ class Desktop_Model extends Model
         try {
             $assunto = $_POST['assunto'];
             $txt = $_POST['txt'];
-            
+
             $msg = array(
                 "code" => 0,
                 "msg" => "Houve um erro ao enviar os emails."
@@ -340,7 +340,7 @@ class Desktop_Model extends Model
             if ($assunto == "" || $txt == "") {
                 echo json_encode($msg);
                 exit;
-            } 
+            }
 
             $result = $this->db->select('select c.email
                                          from slimdata.cliente c');
@@ -351,9 +351,6 @@ class Desktop_Model extends Model
             }
             //var_dump($result); 
             exit;
-            
-
-
         } catch (Exception $e) {
             $msg = array(
                 "code" => 2,
@@ -383,36 +380,36 @@ class Desktop_Model extends Model
         try {
 
             $result = $this->db->select('select (
-                select count(*)
+                select IFNULL(count(*), 0)
                 from venda v 
                 where v.aberta = 1
                 and   cast(v.datavenda as date) = cast(now() as date)
                ) vendashj,
                (
-                select count(*)
+                select IFNULL(count(*), 0)
                 from venda v
                 where cast(v.datavenda as date) = cast(now() as date)
                ) vendastotaishj,
                (
-                select count(*)
+                select IFNULL(count(*), 0)
                 from venda v 
                 where cast(v.datavenda as date)
                     between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
                ) vendastotaismes,
                (
-                   select avg(v.total)
+                   select IFNULL(avg(v.total), 0)
                 from venda v 
                 where cast(v.datavenda as date)
                     between DATE_ADD(CURRENT_DATE(), INTERVAL -7 DAY) AND CURRENT_DATE()
                ) ticketmediosemanal,
                (
-                select avg(v.total)
+                select IFNULL(avg(v.total), 0)
                 from venda v 
                 where cast(v.datavenda as date)
                     between DATE_ADD(CURRENT_DATE(), INTERVAL -30 DAY) AND CURRENT_DATE()
                ) ticketmediomensal,
                (
-                   select avg(v.total)
+                   select IFNULL(avg(v.total), 0)
                 from venda v 
                 where cast(v.datavenda as date)
                     between DATE_ADD(CURRENT_DATE(), INTERVAL -365 DAY) AND CURRENT_DATE()
@@ -421,6 +418,19 @@ class Desktop_Model extends Model
         } catch (Exception $e) {
         }
         echo json_encode($result);
+    }
+
+    public function todosProdutosXml()
+    {
+        try {
+
+            /* $mpdf = new \Mpdf\Mpdf();
+            $mpdf->WriteHTML('<h1>Hello world!</h1>');
+            $mpdf->Output(); */
+            
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 }
 
